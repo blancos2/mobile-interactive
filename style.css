@@ -1,0 +1,27 @@
+@media screen and (max-width: 1200px) {
+    #desktop-nav{
+        display: none;
+    }
+    #hamburger-nav{
+        display: flex;
+    }
+    #about {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centers items horizontally */
+        gap: 1rem; /* Adds spacing between the stacked elements */
+        padding: 2rem;
+        height: fit-content;
+    }
+
+    #projects{
+        height: fit-content;
+    }
+    #experience{
+        height: fit-content;
+    }
+    
+    .about-pic{
+        width: 80vh;
+    }
+}
