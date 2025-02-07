@@ -13,53 +13,67 @@
 <body>
     <h1>Westernguesser</h1>
 
-    <button id="start-btn" class="btn btn-primary mt-3">Start!</button>
     <div class="info">
-        <p id = pes>Timer: <span id="timer">0</span> seconds</p>
-        <p id = pes2>Score: <span id="score">0</span></p>
+        <p id = "pes">Timer: <span id="timer">0</span> seconds</p>
+        <p>Score: <span id="score">0</span></p>
+        <p id = "answer">ANSWER</p>
     </div>
     <h2 id="prompt">Press the button to begin!</h2>
+    <h2 id ="prompting"></h2>
     
     <div id="imageContainer">
-        <img id="artzen hall" src="images/artzen hall.png" alt="Artzen Hall">
-        <img id="biology" src="images/biology.png" alt="Biology">
-        <img id="communication facility" src="images/communication facility.png" alt="Communication Facility">
-        <img id="enviromental studies" src="images/enviromental studies.png" alt="Environmental Studies">
-        <img id="feats of strength" src="images/feats of strength.png" alt="Feats of Strength">
-        <img id="stairs to nowhere" src="images/stairs to nowhere.png" alt="Stairs to Nowhere">
+        <img id="AH" src="images/artzen hall.png" alt="Artzen Hall">
+        <img id="Bio" src="images/biology.png" alt="Biology">
+        <img id="CF" src="images/communication facility.png" alt="Communication Facility">
+        <img id="ES" src="images/enviromental studies.png" alt="Environmental Studies">
+        <img id="FoS" src="images/feats of strength.png" alt="Feats of Strength">
+        <img id="StN" src="images/stairs to nowhere.png" alt="Stairs to Nowhere">
     </div>
     
 
     <script>
         
-const startBtn = document.getElementById("start-btn");
+
 
 const prompts = [
     "Which has a sky bridge?",
     "Where are the CS labs?",
     "Which is the feats of strength?",
     "Which one of these is a student project?",
-    "Which building has the starbucks?"
+    "Which building has the starbucks?",
+    "Which is the tallest building?",
+    "Which is closer to the Rec center?",
+    "Which building has the most entrances?"  
 ];
 
 const answers = [
-    'biology',
-    'comunication facility',
-    'feats of strength',
-    'stairs to nowhere',
-    'artzen hall'
+    'Bio',
+    'CF',
+    'FoS',
+    'StN',
+    'AH',
+    "ES",
+    "CF",
+    "AH"
 ];
 
 let remainingPrompts = [...prompts];
 let remainingAnswers = [...answers];
 let score = 0;
 let correctAnswerId = '';
+let runningGame = true;
 
 const pes = document.getElementById('pes');
 const pes2 = document.getElementById('pes2');
 const timerDisplay = document.getElementById('timer');
 const scoreDisplay = document.getElementById('score');
 const promptDisplay = document.getElementById('prompt');
+const answerDisplay = document.getElementById('answer');
+const promptingDisplay = document.getElementById('prompting');
+
+
+answerDisplay.style.display = 'none';
+promptingDisplay.style.display = 'none';
 
 
 
@@ -68,12 +82,28 @@ function runGame() {
     if (remainingPrompts.length > 0) {
         runRound();
     } else {
-        alert(`Game over! Your final score is: ${score}`);
+        
+        endGame()
+        runningGame= false;
+        pes.style.display = 'none';
+        timerDisplay.style.display = 'none';
+        promptDisplay.textContent = 'How does your score compare to everyone else?';
+        
+
+        document.querySelectorAll('#imageContainer img').forEach(img => {
+            img.style.display = "none";
+        })
+        
+
+
     }
+}
+function endGame(){
+    alert(`Game over!`);
 }
 
 function runRound() {
-    let timer = 10;
+    let timer = 15;
     timerDisplay.textContent = timer;
 
     const randomIndex = Math.floor(Math.random() * remainingPrompts.length);
@@ -81,14 +111,15 @@ function runRound() {
     correctAnswerId = remainingAnswers.splice(randomIndex, 1)[0];
 
     promptDisplay.textContent = currentPrompt;
+    answerDisplay.textContent = correctAnswerId;
 
     const timerInterval = setInterval(() => {
         timer--;
         timerDisplay.textContent = timer;
 
-        if (timer <= 0) {
+        if (timer <= 0 & runningGame) {
             clearInterval(timerInterval);
-            alert('Time is up!');
+            promptingDisplay.textContent = 'Time is up!';
             runGame();
         }
     }, 1000);
@@ -99,12 +130,18 @@ function runRound() {
                 clearInterval(timerInterval);
                 score += timer;
                 scoreDisplay.textContent = score;
-                alert(`Correct! Your current score is: ${score}`);
-                img.removeEventListener('click', handleClick);
+                promptingDisplay.textContent = 'Correct!';
+               
                 runGame();
             } else {
-                alert('Incorrect. Try again.');
-                img.removeEventListener('click', handleClick);
+                if (score > 0){
+                    score -= 1;
+                }
+
+                scoreDisplay.textContent = score;
+                promptingDisplay.textContent = 'Incorrect!';
+                
+                
             }
         });
     });
