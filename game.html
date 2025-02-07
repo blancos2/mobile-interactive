@@ -120,7 +120,8 @@ function runRound() {
         if (timer <= 0 & runningGame) {
             clearInterval(timerInterval);
             promptingDisplay.textContent = 'Time is up!';
-            runGame();
+            setTimeout(runGame, 1000);
+           
         }
     }, 1000);
 
@@ -132,7 +133,7 @@ function runRound() {
                 scoreDisplay.textContent = score;
                 promptingDisplay.textContent = 'Correct!';
                
-                runGame();
+                 setTimeout(runGame, 1000);
             } else {
                 if (score > 0){
                     score -= 1;
