@@ -64,7 +64,6 @@ const answers = [
 let remainingPrompts = [...prompts];
 let remainingAnswers = [...answers];
 let score = 0;
-let timer = 15;
 let correctAnswerId = '';
 let runningGame = true;
 let firstRound = true;
@@ -86,12 +85,13 @@ promptingDisplay.style.display = 'none';
 
 
 function runGame() {
-    newPrompt();
-    runRound();
+    let timer = 15;
+    newPrompt(timer);
+    runRound(timer);
     
 }
 
-function newPrompt(){
+function newPrompt(timer){
     if (remainingPrompts.length > 0) {
         const randomIndex = Math.floor(Math.random() * remainingPrompts.length);
         const currentPrompt = remainingPrompts.splice(randomIndex, 1)[0];
@@ -118,7 +118,7 @@ function newPrompt(){
 }
 
                                                          
-function runRound() {
+function runRound(timer) {
     timerDisplay.textContent = timer;
     const timerInterval = setInterval(() => {
         console = console + '1';
@@ -167,7 +167,7 @@ function createClicker(getCurrentTimer) {
 
 
 // Automatically start the game when the script loads
-window.onload = runGame;
+window.onload = runGame();
 
     </script>
 
