@@ -112,12 +112,4 @@
     }
         */
 
-completeBtn.addEventListener("click", () => {
-    clearInterval(timer);
-    score++;
-    scoreDisplay.textContent = score;
-    completeBtn.disabled = true;
-    currentIndex++;
-    setTimeout(nextPrompt, 1000);
-});
 
