@@ -151,11 +151,11 @@ function runRound() {
     });
 }
 
-function clearEventListener(){
+function clearEventListener() {
     document.querySelectorAll('#imageContainer img').forEach(img => {
-        img.removeEventListener('click', handleClick);
-}
-setTimeout(runGame, 1000);
+        img.removeEventListener('click', handleClick); // Removed parentheses
+    }); // Added missing closing parenthesis
+    setTimeout(runGame, 1000);
 }
 
 // Automatically start the game when the script loads
