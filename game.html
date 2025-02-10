@@ -37,12 +37,14 @@
 
 const prompts = [
     "Which has a sky bridge?",
-
     "Which is the feats of strength?",
     "Which one of these is a student project?",
     "Which building has the starbucks?",
     "Which is the tallest building?",
-    "Which is closer to the Rec center?"
+    "Which is closer to the Rec center?", 
+    "Which has the CS labs?", 
+    "Which building doesn't have a basement floor?",
+    "Which has floors with plants growing on the balcony?"
   
 ];
 
@@ -52,15 +54,22 @@ const answers = [
     'StN',
     'AH',
     "ES",
-    "CF"
+    "CF",
+    "CF",
+    "Bio",
+    "ES"
  
 ];
 
 let remainingPrompts = [...prompts];
 let remainingAnswers = [...answers];
 let score = 0;
+let timer = 15;
 let correctAnswerId = '';
 let runningGame = true;
+let firstRound = true;
+let console = "";
+
 
 const pes = document.getElementById('pes');
 const pes2 = document.getElementById('pes2');
@@ -69,7 +78,7 @@ const scoreDisplay = document.getElementById('score');
 const promptDisplay = document.getElementById('prompt');
 const answerDisplay = document.getElementById('answer');
 const promptingDisplay = document.getElementById('prompting');
-
+const consoleDisplay = document.getElementById('console');
 
 answerDisplay.style.display = 'none';
 promptingDisplay.style.display = 'none';
@@ -77,86 +86,85 @@ promptingDisplay.style.display = 'none';
 
 
 function runGame() {
+    newPrompt();
+    runRound();
     
+}
+
+function newPrompt(){
     if (remainingPrompts.length > 0) {
-        
-        runRound();
+        const randomIndex = Math.floor(Math.random() * remainingPrompts.length);
+        const currentPrompt = remainingPrompts.splice(randomIndex, 1)[0];
+        correctAnswerId = remainingAnswers.splice(randomIndex, 1)[0];
+        // select the randomly from list, and select corresponding index on answer list to determine the ID of the correct image 
+        promptDisplay.textContent = currentPrompt;
+        answerDisplay.textContent = correctAnswerId;
+
+        timer = 15; // reset timer
+
     } else {
-        
-        endGame()
+        alert(`Game over!`);
         runningGame= false;
         pes.style.display = 'none';
         timerDisplay.style.display = 'none';
         promptDisplay.textContent = 'How does your score compare to everyone else?';
         
-
         document.querySelectorAll('#imageContainer img').forEach(img => {
             img.style.display = "none";
         })
         
-
-
     }
-}
-function endGame(){
-    alert(`Game over!`);
-}
 
-
+}
 
                                                          
 function runRound() {
-    let timer = 15;
     timerDisplay.textContent = timer;
-
-    const randomIndex = Math.floor(Math.random() * remainingPrompts.length);
-    const currentPrompt = remainingPrompts.splice(randomIndex, 1)[0];
-    correctAnswerId = remainingAnswers.splice(randomIndex, 1)[0];
-
-    promptDisplay.textContent = currentPrompt;
-    answerDisplay.textContent = correctAnswerId;
-
     const timerInterval = setInterval(() => {
+        console = console + '1';
+        consoleDisplay.textContent= console;
         timer--;
         timerDisplay.textContent = timer;
 
-        if (timer <= 0 & runningGame) {
+        if (timer <= 0 && runningGame) {
             clearInterval(timerInterval);
             promptingDisplay.textContent = 'Time is up!';
-            setTimeout(runGame, 1000);
+            
+            setTimeout(newPrompt, 1000);
            
         }
     }, 1000);
 
+    if (firstRound) {
+        firstRound = false;
+        createClicker(() => timer); // Pass a function to get current timer
+    }
+}
+
+function createClicker(getCurrentTimer) { 
     document.querySelectorAll('#imageContainer img').forEach(img => {
-        img.addEventListener('click', function handleClick() {
+        img.style.display = "block";
+        img.addEventListener('click', () => {
+            const currentTimer = getCurrentTimer(); // Get the latest timer value
+
             if (img.id === correctAnswerId) {
-                clearInterval(timerInterval);
-                score += timer;
+                score += currentTimer; 
                 scoreDisplay.textContent = score;
                 promptingDisplay.textContent = 'Correct!';
-                clearEventListener();
-                
+                newPrompt();
             } else {
-                if (score > 0){
+                if (score > 0) {
                     score -= 1;
                 }
-
                 scoreDisplay.textContent = score;
                 promptingDisplay.textContent = 'Incorrect!';
-                
-                
             }
         });
     });
 }
 
-function clearEventListener() {
-    document.querySelectorAll('#imageContainer img').forEach(img => {
-        img.removeEventListener('click', handleClick); // Removed parentheses
-    }); // Added missing closing parenthesis
-    setTimeout(runGame, 1000);
-}
+
+
 
 // Automatically start the game when the script loads
 window.onload = runGame;
