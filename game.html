@@ -79,6 +79,7 @@ promptingDisplay.style.display = 'none';
 function runGame() {
     
     if (remainingPrompts.length > 0) {
+        
         runRound();
     } else {
         
@@ -101,6 +102,9 @@ function endGame(){
     alert(`Game over!`);
 }
 
+
+
+                                                         
 function runRound() {
     let timer = 15;
     timerDisplay.textContent = timer;
@@ -131,8 +135,8 @@ function runRound() {
                 score += timer;
                 scoreDisplay.textContent = score;
                 promptingDisplay.textContent = 'Correct!';
-               
-                 setTimeout(runGame, 1000);
+                clearEventListener();
+                
             } else {
                 if (score > 0){
                     score -= 1;
@@ -145,6 +149,13 @@ function runRound() {
             }
         });
     });
+}
+
+function clearEventListener(){
+    document.querySelectorAll('#imageContainer img').forEach(img => {
+        img.removeEventListener('click', handleClick);
+}
+setTimeout(runGame, 1000);
 }
 
 // Automatically start the game when the script loads
