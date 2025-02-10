@@ -64,6 +64,8 @@ const answers = [
 let remainingPrompts = [...prompts];
 let remainingAnswers = [...answers];
 let score = 0;
+let timer;
+let timeLeft = 15;
 let correctAnswerId = '';
 let runningGame = true;
 let firstRound = true;
@@ -85,13 +87,12 @@ promptingDisplay.style.display = 'none';
 
 
 function runGame() {
-    let timer = 15;
-    newPrompt(timer);
-    runRound(timer);
+    newPrompt();
+    runRound();
     
 }
 
-function newPrompt(timer){
+function newPrompt(){
     if (remainingPrompts.length > 0) {
         const randomIndex = Math.floor(Math.random() * remainingPrompts.length);
         const currentPrompt = remainingPrompts.splice(randomIndex, 1)[0];
@@ -100,7 +101,7 @@ function newPrompt(timer){
         promptDisplay.textContent = currentPrompt;
         answerDisplay.textContent = correctAnswerId;
 
-        timer = 15; // reset timer
+        timeLeft = 15; // reset timer
 
     } else {
         alert(`Game over!`);
@@ -117,38 +118,28 @@ function newPrompt(timer){
 
 }
 
-                                                         
-function runRound(timer) {
+                                                      
+function runRound() {
     timerDisplay.textContent = timer;
-    const timerInterval = setInterval(() => {
-        console = console + '1';
-        consoleDisplay.textContent= console;
-        timer--;
-        timerDisplay.textContent = timer;
+    timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
 
         if (timer <= 0 && runningGame) {
-            clearInterval(timerInterval);
+            clearInterval(timer);
             promptingDisplay.textContent = 'Time is up!';
-            
             setTimeout(newPrompt, 1000);
-           
         }
     }, 1000);
 
-    if (firstRound) {
-        firstRound = false;
-        createClicker(() => timer); // Pass a function to get current timer
-    }
-}
 
-function createClicker(getCurrentTimer) { 
     document.querySelectorAll('#imageContainer img').forEach(img => {
         img.style.display = "block";
         img.addEventListener('click', () => {
-            const currentTimer = getCurrentTimer(); // Get the latest timer value
+            
 
             if (img.id === correctAnswerId) {
-                score += currentTimer; 
+                score += timeLeft; 
                 scoreDisplay.textContent = score;
                 promptingDisplay.textContent = 'Correct!';
                 newPrompt();
@@ -161,10 +152,8 @@ function createClicker(getCurrentTimer) {
             }
         });
     });
+
 }
-
-
-
 
 // Automatically start the game when the script loads
 window.onload = runGame();
